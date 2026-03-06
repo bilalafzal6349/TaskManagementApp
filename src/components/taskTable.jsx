@@ -14,7 +14,7 @@ const TaskTable = ({ tasks, deleteTask, onUpdate }) => {
   };
 
   return (
-    <div className="w-100 mt-6">
+    <div className="w-100 mt-6 ">
       <div className="mb-4">
         <h3 className="text-white text-2xl font-bold mb-1">Your Tasks</h3>
         <p className="text-gray-400">
@@ -23,7 +23,7 @@ const TaskTable = ({ tasks, deleteTask, onUpdate }) => {
       </div>
 
       {tasks.length === 0 ? (
-        <div className="text-center py-8">
+        <div className="text-center py-8 ">
           <p className="text-gray-400 text-lg">
             No tasks yet. Create one to get started! 🚀
           </p>
@@ -34,15 +34,13 @@ const TaskTable = ({ tasks, deleteTask, onUpdate }) => {
             return (
               <div
                 key={task.id}
-                className="bg-grey-900 p-4 rounded-lg text-white shadow-lg hover:shadow-xl transition-all flex items-center justify-between flex-wrap gap-3"
+                className=" p-4 rounded-lg text-white shadow-lg hover:shadow-xl transition-all flex items-center justify-between flex-wrap gap-3 bg-[linear-gradient(180deg,rgba(255,255,255,0.15),rgba(255,255,255,.10))]!"
               >
                 <div className="flex items-start gap-3 flex-1">
                   <span className="bg-purple-600 rounded-full w-8 h-8 flex items-center justify-center font-bold text-sm">
                     {index + 1}
                   </span>
-                  <p className="text-base font-medium break-words">
-                    {task.task}
-                  </p>
+                  <p className="text-base font-medium ">{task.task}</p>
                 </div>
 
                 <div className="flex gap-2">

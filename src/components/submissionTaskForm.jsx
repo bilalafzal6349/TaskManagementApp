@@ -38,9 +38,6 @@ function SubmissionTaskForm({ editingTask, onSubmit }) {
     <Form
       onSubmit={handleSubmit}
       className="bg-gradient p-6 rounded-lg shadow-lg"
-      style={{
-        background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
-      }}
     >
       <h2 className="text-white mb-4 font-bold">
         {isEditing ? "Edit Task" : "Create New Task"}
@@ -69,7 +66,7 @@ function SubmissionTaskForm({ editingTask, onSubmit }) {
       <Button
         variant="light"
         type="submit"
-        className="w-100 font-bold py-2 rounded-md transition-all text-4xl!  hover:scale-102 hover:bg-purple-500! hover:text-white! "
+        className="w-100 font-bold py-2 rounded-md transition-all text-2xl!  hover:scale-102 hover:bg-purple-500! hover:text-white! "
       >
         {isEditing ? "Update Task" : "Add Task"}
       </Button>

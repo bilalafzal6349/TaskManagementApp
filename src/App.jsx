@@ -34,14 +34,16 @@ function App() {
   };
 
   return (
-    <div 
-      className="min-h-screen py-8 px-4"
-      style={{
-        background: "linear-gradient(135deg, #0f0c29 0%, #302b63 50%, #24243e 100%)"
-      }}
+    <div
+      className="min-h-screen py-8 px-4 bg-[#0f0c29]!"
+      style={
+        {
+          // background: "linear-gradient(135deg, #0f0c29 0%, #302b63 50%, #24243e 100%)"
+        }
+      }
     >
-      <Toaster 
-        position="top-center" 
+      <Toaster
+        position="top-center"
         reverseOrder={false}
         toastOptions={{
           duration: 3000,
@@ -49,17 +51,17 @@ function App() {
             background: "#1a1a2e",
             color: "#fff",
             borderRadius: "8px",
-            border: "1px solid #667eea"
-          }
+            border: "1px solid #667eea",
+          },
         }}
       />
-      
+
       <Container className="max-w-2xl">
         <div className="text-center mb-8">
           <h1 className="text-white text-4xl font-bold mb-2">Task Manager</h1>
           <p className="text-gray-300 text-lg">Stay organized and productive</p>
         </div>
-        
+
         <Row className="mb-6">
           <Col>
             <SubmissionTaskForm
@@ -68,7 +70,7 @@ function App() {
             />
           </Col>
         </Row>
-        
+
         <Row>
           <Col>
             <TaskTable
