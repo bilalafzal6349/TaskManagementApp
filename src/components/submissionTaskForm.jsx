@@ -66,7 +66,7 @@ function SubmissionTaskForm({ editingTask, onSubmit }) {
       <Button
         variant="light"
         type="submit"
-        className="w-100 font-bold py-2 rounded-md transition-all text-2xl!  hover:scale-102 hover:bg-purple-500! hover:text-white! "
+        className="w-100 font-bold py-2 rounded-md transition-all text-2xl!  hover:scale-99 hover:bg-purple-500! hover:text-white! "
       >
         {isEditing ? "Update Task" : "Add Task"}
       </Button>
