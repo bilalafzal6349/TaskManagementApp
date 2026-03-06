@@ -35,7 +35,7 @@ function App() {
 
   return (
     <div
-      className="min-h-screen py-8 px-4 bg-[#0f0c29]!"
+      className="min-h-screen  mx-auto py-8 px-4 bg-[#0f0c29]!"
       style={
         {
           // background: "linear-gradient(135deg, #0f0c29 0%, #302b63 50%, #24243e 100%)"
@@ -56,7 +56,7 @@ function App() {
         }}
       />
 
-      <Container className="max-w-2xl">
+      <Container className="max-w-255!">
         <div className="text-center mb-8">
           <h1 className="text-white text-4xl font-bold mb-2">Task Manager</h1>
           <p className="text-gray-300 text-lg">Stay organized and productive</p>
