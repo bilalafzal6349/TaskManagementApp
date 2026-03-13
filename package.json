@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "@tailwindcss/vite": "^4.2.1",
+    "axios": "^1.13.6",
     "bootstrap": "^5.3.8",
     "react-bootstrap": "^2.10.10",
     "react-hot-toast": "^2.6.0",

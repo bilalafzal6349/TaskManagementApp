@@ -1,37 +1,102 @@
 import "./App.css";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Container, Row, Col } from "react-bootstrap";
 import { Toaster } from "react-hot-toast";
+import toast from "react-hot-toast";
 
 import SubmissionTaskForm from "./components/submissionTaskForm";
 import TaskTable from "./components/taskTable";
-
-const InitialTasks = [{"id":1, "task":"Task 1"}, {"id":2, "task":"Task 2"}, {"id":3, "task":"Task 3"}];
+import { taskApi } from "./services/api";
 
 function App() {
-  const [tasks, setTasks] = useState(InitialTasks);
+  const [tasks, setTasks] = useState([]);
   const [editingId, setEditingId] = useState(null);
-  
-  const handleUpdateTask = (id, newTask) => {
-    setTasks((prev) =>
-      prev.map((task) => 
-        task.id === id ? { ...task, task: newTask } : task
-      )
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  // Fetch tasks on component mount
+  useEffect(() => {
+    fetchTasks();
+  }, []);
+
+  const fetchTasks = async () => {
+    try {
+      setLoading(true);
+      setError(null);
+      const fetchedTasks = await taskApi.getAllTasks();
+      setTasks(fetchedTasks);
+    } catch (err) {
+      setError(err.message);
+      toast.error("Failed to load tasks");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleUpdateTask = async (id, newTask) => {
+    try {
+      const updatedTask = await taskApi.updateTask(id, { task: newTask });
+      setTasks((prev) =>
+        prev.map((task) => (task.id === id ? updatedTask : task)),
+      );
+      setEditingId(null);
+      toast.success("Task updated successfully!");
+    } catch (err) {
+      toast.error(err.message);
+    }
+  };
+
+  const handleFormSubmit = async (task) => {
+    if (editingId) {
+      await handleUpdateTask(editingId, task.task);
+    } else {
+      await addTask(task);
+    }
+  };
+
+  const addTask = async (task) => {
+    try {
+      const newTask = await taskApi.createTask(task);
+      setTasks((prev) => [...prev, newTask]);
+      toast.success("Task added successfully!");
+    } catch (err) {
+      toast.error(err.message);
+    }
+  };
+
+  const deleteTask = async (id) => {
+    try {
+      await taskApi.deleteTask(id);
+      setTasks(tasks.filter((task) => task.id !== id));
+      toast.success("Task deleted successfully!");
+    } catch (err) {
+      toast.error(err.message);
+    }
+  };
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-[#0f0c29]">
+        <div className="text-white text-xl">Loading tasks...</div>
+      </div>
     );
-    setEditingId(null);
-  };
-  
-  const handleFormSubmit = (task) => {
-    editingId ? handleUpdateTask(editingId, task.task) : addTask(task);
-  };
-  
-  const addTask = (task) => {
-    setTasks((prev) => [...prev, { ...task, id: Date.now() }]);
-  };
-  
-  const deleteTask = (id) => {
-    setTasks(tasks.filter((task) => task.id !== id));
-  };
+  }
+
+  if (error) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-[#0f0c29]">
+        <div className="text-center">
+          <div className="text-red-400 text-xl mb-4">Error: {error}</div>
+          <button
+            onClick={fetchTasks}
+            className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
+          >
+            Retry
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div

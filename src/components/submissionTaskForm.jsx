@@ -3,19 +3,22 @@ import Form from "react-bootstrap/Form";
 import { useState, useEffect } from "react";
 import toast from "react-hot-toast";
 
-function SubmissionTaskForm({ editingTask, onSubmit }) {
-  const empty = { task: "", id: null };
+const EMPTY_TASK = { task: "", id: null };
 
-  const [input, setInput] = useState(empty);
+function SubmissionTaskForm({ editingTask, onSubmit }) {
+  const [input, setInput] = useState(EMPTY_TASK);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const isEditing = Boolean(editingTask);
 
   useEffect(() => {
     if (editingTask) {
       setInput(editingTask);
+    } else {
+      setInput(EMPTY_TASK);
     }
-  }, [editingTask?.id]);
+  }, [editingTask]);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     if (!input.task.trim()) {
@@ -23,11 +26,15 @@ function SubmissionTaskForm({ editingTask, onSubmit }) {
       return;
     }
 
-    onSubmit(input);
-    toast.success(
-      isEditing ? "Task updated successfully!" : "Task added successfully!",
-    );
-    setInput(empty);
+    setIsSubmitting(true);
+    try {
+      await onSubmit(input);
+      setInput(EMPTY_TASK);
+    } catch {
+      // Error is handled in the parent component
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const handleChange = (e) => {
@@ -67,8 +74,13 @@ function SubmissionTaskForm({ editingTask, onSubmit }) {
         variant="light"
         type="submit"
         className="w-100 font-bold py-2 rounded-md transition-all text-2xl!  hover:scale-99 hover:bg-purple-500! hover:text-white! "
+        disabled={isSubmitting}
       >
-        {isEditing ? "Update Task" : "Add Task"}
+        {isSubmitting ? (
+          <span>Processing...</span>
+        ) : (
+          <span>{isEditing ? "Update Task" : "Add Task"}</span>
+        )}
       </Button>
     </Form>
   );

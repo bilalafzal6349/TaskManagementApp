@@ -1,16 +1,38 @@
 import Button from "react-bootstrap/Button";
-import toast from "react-hot-toast";
+import Modal from "react-bootstrap/Modal";
+import { useState } from "react";
 import { MdEdit, MdDelete } from "react-icons/md";
 
 const TaskTable = ({ tasks, deleteTask, onUpdate }) => {
-  const handleDelete = (id) => {
-    deleteTask(id);
-    toast.success("Task deleted!");
+  const [deletingId, setDeletingId] = useState(null);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [taskToDelete, setTaskToDelete] = useState(null);
+
+  const handleDeleteClick = (task) => {
+    setTaskToDelete(task);
+    setShowDeleteModal(true);
+  };
+
+  const handleConfirmDelete = async () => {
+    if (taskToDelete) {
+      setDeletingId(taskToDelete.id);
+      setShowDeleteModal(false);
+      try {
+        await deleteTask(taskToDelete.id);
+      } finally {
+        setDeletingId(null);
+        setTaskToDelete(null);
+      }
+    }
+  };
+
+  const handleCancelDelete = () => {
+    setShowDeleteModal(false);
+    setTaskToDelete(null);
   };
 
   const handleEdit = (id) => {
     onUpdate(id);
-    toast.loading("Edit mode activated", { duration: 1000 });
   };
 
   return (
@@ -58,13 +80,15 @@ const TaskTable = ({ tasks, deleteTask, onUpdate }) => {
 
                   <Button
                     variant="danger"
-                    onClick={() => handleDelete(task.id)}
+                    onClick={() => handleDeleteClick(task)}
                     type="button"
                     size="sm"
                     className="font-semibold"
+                    disabled={deletingId === task.id}
                   >
                     <div className="flex items-center gap-1">
-                      <MdDelete /> Delete
+                      <MdDelete />{" "}
+                      {deletingId === task.id ? "Deleting..." : "Delete"}
                     </div>
                   </Button>
                 </div>
@@ -73,6 +97,38 @@ const TaskTable = ({ tasks, deleteTask, onUpdate }) => {
           })}
         </div>
       )}
+
+      {/* Delete Confirmation Modal */}
+      <Modal
+        show={showDeleteModal}
+        onHide={handleCancelDelete}
+        centered
+        className="text-dark"
+      >
+        <Modal.Header closeButton>
+          <Modal.Title>Confirm Delete</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <p>Are you sure you want to delete this task?</p>
+          {taskToDelete && (
+            <div className="bg-light p-3 rounded mt-3">
+              <strong>Task:</strong> {taskToDelete.task}
+            </div>
+          )}
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={handleCancelDelete}>
+            Cancel
+          </Button>
+          <Button
+            variant="danger"
+            onClick={handleConfirmDelete}
+            disabled={deletingId !== null}
+          >
+            {deletingId !== null ? "Deleting..." : "Delete Task"}
+          </Button>
+        </Modal.Footer>
+      </Modal>
     </div>
   );
 };
